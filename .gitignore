@@ -2,3 +2,4 @@ node_modules/
 videos/
 screenshots/
 package-lock.json
+cypress/downloads

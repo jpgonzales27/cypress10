@@ -1,10 +1,13 @@
 import { defineConfig } from "cypress";
+//verify downloads import
+const { isFileExist, findFiles } = require("cy-verify-downloads");
 
 export default defineConfig({
   e2e: {
     baseUrl: "http://uitestingplayground.com",
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // verify download import
+      on("task", { isFileExist, findFiles });
     },
     env: {
       demoVar: "Hello from Cypress.Config.ts",
@@ -12,6 +15,7 @@ export default defineConfig({
       demoQA: "https://demoqa.com",
       theInternet: "https://the-internet.herokuapp.com",
     },
+    experimentalSessionAndOrigin: true,
   },
   pageLoadTimeout: 90000,
 });
