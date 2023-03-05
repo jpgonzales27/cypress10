@@ -6,7 +6,13 @@
   "scripts": {
     "runner": "cypress open",
     "run-chrome": "cypress open --e2e --browser chrome",
-    "run-newbaseUrl": "cypress open --e2e --browser chrome --config baseUrl=https://example.com/my-app"
+    "run-newbaseUrl": "cypress open --e2e --browser chrome --config baseUrl=https://example.com/my-app",
+    "runner2": "cypress open --e2e --browser chrome --config baseUrl=http://uitestingplayground.com --env demoVar=Hello_From_Package_File",
+    "cypress-run-headless": "cypress run --browser chrome",
+    "cypress-run-headless-onetest": "cypress run --browser chrome --spec cypress/e2e/032-array-objects.cy.ts",
+    "cypress-run-onetest": "cypress run --browser chrome --headed --spec cypress/e2e/032-array-objects.cy.ts",
+    "runner-mobile": "cypress open --e2e --browser chrome --config baseUrl=http://uitestingplayground.com,viewportWidth=100 --env demoVar=Hello_From_Package_File",
+    "cypress-dashboard-parallel": "cypress run --record --key 94abf18e-7fa6-4292-bdf0-11a0e8d16c71 --parallel --spec cypress/e2e/parallel-test/*.ts --browser chrome"
   },
   "keywords": [
     "cypress",
@@ -22,6 +28,7 @@
     "cy-verify-downloads": "^0.1.8",
     "cypress": "^10.6.0",
     "cypress-file-upload": "^5.0.8",
+    "cypress-mochawesome-reporter": "^3.3.0",
     "cypress-real-events": "^1.7.1",
     "cypress-xpath": "^2.0.1",
     "typescript": "^4.8.2"

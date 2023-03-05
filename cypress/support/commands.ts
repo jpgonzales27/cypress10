@@ -32,10 +32,42 @@ require("cy-verify-downloads").addCustomCommand();
 // declare global {
 //   namespace Cypress {
 //     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+//       login(email: string, password: string): Chainable<void>;
+//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>;
+//       dismiss(
+//         subject: string,
+//         options?: Partial<TypeOptions>
+//       ): Chainable<Element>;
+//       visit(
+//         originalFn: CommandOriginalFn,
+//         url: string,
+//         options: Partial<VisitOptions>
+//       ): Chainable<Element>;
 //     }
 //   }
 // }
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email: string, password: string): Chainable<void>;
+      safeLogin(email: string, password: string): Chainable<void>;
+      parseXlsx(inputFile: any): any;
+    }
+  }
+}
+
+Cypress.Commands.add("login", (username: string, password: string) => {
+  cy.get("#userName").type(username);
+  cy.get("#password").type(password);
+  cy.get("#login").click();
+});
+
+Cypress.Commands.add("safeLogin", (username: string, password: string) => {
+  cy.get("#userName").type(username);
+  cy.get("#password").type(password, { log: false });
+  cy.get("#login").click();
+});
+
+Cypress.Commands.add("parseXlsx", (inputFile) => {
+  return cy.task("parseXlsx", { filePath: inputFile });
+});
