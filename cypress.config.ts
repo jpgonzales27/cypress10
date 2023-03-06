@@ -6,7 +6,9 @@ const xlsx = require("node-xlsx").default;
 const fs = require("fs"); // for file
 const path = require("path"); // for file path
 //mySQL requirements
-const mysql = require("mysql");
+const mysql = require("mysql2");
+//Faker
+const { faker } = require("@faker-js/faker");
 
 export default defineConfig({
   e2e: {
@@ -35,6 +37,19 @@ export default defineConfig({
       });
       //para el reporte de mocha
       require("cypress-mochawesome-reporter/plugin")(on);
+      //Faker
+      on("task", {
+        freshUser() {
+          let user = {
+            username: faker.name.firstName(),
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+            registeredAt: faker.date.past(),
+            vehicle: faker.vehicle.vehicle(),
+          };
+          return user;
+        },
+      });
     },
     env: {
       demoVar: "Hello from Cypress.Config.ts",
@@ -50,7 +65,7 @@ export default defineConfig({
       //Mobile Validation
       mobileViewportWidthBreakpoint: 400,
     },
-    experimentalSessionAndOrigin: true,
+    // experimentalSessionAndOrigin: true,
   },
   pageLoadTimeout: 90000,
   // viewportHeight: 1000,
