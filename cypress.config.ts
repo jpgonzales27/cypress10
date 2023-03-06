@@ -1,6 +1,12 @@
 import { defineConfig } from "cypress";
 //verify downloads import
 const { isFileExist, findFiles } = require("cy-verify-downloads");
+//Excel requirements
+const xlsx = require("node-xlsx").default;
+const fs = require("fs"); // for file
+const path = require("path"); // for file path
+//mySQL requirements
+const mysql = require("mysql");
 
 export default defineConfig({
   e2e: {
@@ -8,6 +14,25 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // verify download import
       on("task", { isFileExist, findFiles });
+      //Excel implementation
+      on("task", {
+        parseXlsx({ filePath }) {
+          return new Promise((resolve, reject) => {
+            try {
+              const jsonData = xlsx.parse(fs.readFileSync(filePath));
+              resolve(jsonData);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        },
+      });
+      //mySQL Implementation & Faker
+      on("task", {
+        queryDb: (query) => {
+          return queryTestDb(query, config);
+        },
+      });
       //para el reporte de mocha
       require("cypress-mochawesome-reporter/plugin")(on);
     },
@@ -16,6 +41,14 @@ export default defineConfig({
       Angular: "https://www.globalsqa.com",
       demoQA: "https://demoqa.com",
       theInternet: "https://the-internet.herokuapp.com",
+      db: {
+        host: "localhost",
+        user: "root",
+        password: "toor",
+        database: "cypress_test",
+      },
+      //Mobile Validation
+      mobileViewportWidthBreakpoint: 400,
     },
     experimentalSessionAndOrigin: true,
   },
@@ -39,3 +72,20 @@ export default defineConfig({
   video: true,
   screenshotOnRunFailure: true,
 });
+function queryTestDb(query, config) {
+  // creates a new mysql connection using credentials from cypress.json env's
+  const connection = mysql.createConnection(config.env.db);
+  // start connection to db
+  connection.connect();
+  // exec query + disconnect to db as a Promise
+  return new Promise((resolve, reject) => {
+    connection.query(query, (error, results) => {
+      if (error) reject(error);
+      else {
+        connection.end();
+        // console.log(results)
+        return resolve(results);
+      }
+    });
+  });
+}
