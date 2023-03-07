@@ -46,6 +46,7 @@ describe("API Testing Demo", () => {
       cy.log("Schema").then(() => {
         expect(response.body.userId).to.be.a("string");
         expect(response.body.username).to.be.a("string");
+        expect(response.body.books).to.be.a("array");
       });
     });
   });
